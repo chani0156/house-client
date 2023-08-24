@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { Button, TextField, Container, Typography, Paper } from '@mui/material';
-import { createHouse } from '../../services/houseService'; 
 import * as Yup from 'yup'; 
 import { useNavigate } from 'react-router-dom';
 import Snacknar from '../common/Snacknar'; 
+import houseService from '../../services/houseService';
 
 const HouseForm: React.FC = () => {
     const navigate = useNavigate();
@@ -30,13 +30,14 @@ const HouseForm: React.FC = () => {
           severity,
         });
       };
-
+  // Handle navigation to view details
     const handleViewDetails = () => {
         if (createdHouseId !== null) {
           navigate(`/houses/${createdHouseId}`);
         }
       };
 
+ // Form handling using Formik
   const formik = useFormik({
     initialValues: {
       address: '',
@@ -48,12 +49,17 @@ const HouseForm: React.FC = () => {
     }),
     onSubmit: async (values) => {
       try {
-        const newHouse = await createHouse(values);
-        setCreatedHouseId(newHouse.id);      
-        openSnackbar('House details created successfully!', 'success');
-        formik.resetForm();
-      } catch (error) {
-        openSnackbar('Error creating house details', 'error');
+        // Call the createHouse function from the service
+        const newHouse = await houseService.createHouse(values);
+        if(newHouse.id){
+             // Set the created house ID and show success snackbar
+            setCreatedHouseId(newHouse.id);      
+            openSnackbar('House details created successfully!', 'success');
+            formik.resetForm();
+        }
+     else openSnackbar('Error creating house details', 'error');
+      } 
+      catch (error) {
       }
     },
   });
@@ -102,10 +108,11 @@ const HouseForm: React.FC = () => {
           error={formik.touched.currentValue && Boolean(formik.errors.currentValue)}
           helperText={formik.touched.currentValue && formik.errors.currentValue}
         />
-        <Button type="submit" variant="contained" color="primary" fullWidth>
+        <Button type="submit" variant="contained" color="primary" fullWidth  disabled={formik.isSubmitting}>
           Submit
         </Button>
       </form>)}
+     {/* Snackbar component for displaying messages */}
       <Snacknar
          open={snackbarInfo.open}
          message={snackbarInfo.message}

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getHouseById } from '../../services/houseService';
 import HouseUpdateForm from '../houseUpdateForm/HouseUpdateForm'; 
 import { Container, Paper, Typography, Button } from '@mui/material';
 import Snacknar from '../common/Snacknar';
+import houseService from '../../services/houseService';
 
 interface HouseDetail {
   id: number;
@@ -41,7 +41,7 @@ const HouseDetail: React.FC = () => {
   useEffect(() => {
     async function fetchHouseDetails() {
       try {
-        const fetchedHouse = await getHouseById(Number(id));
+        const fetchedHouse = await houseService.getHouseById(Number(id));
         setHouse(fetchedHouse);
       } catch (error) {
         console.error('Error fetching house details:', error);
@@ -58,7 +58,7 @@ const HouseDetail: React.FC = () => {
     try {
         if(isSuccess){
             openSnackbar('House details updated successfully!', 'success');
-            const updatedHouse = await getHouseById(Number(id));
+            const updatedHouse = await houseService.getHouseById(Number(id));
             setHouse(updatedHouse);
             setEditMode(false);
         }

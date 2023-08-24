@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { Button, TextField, Container, Typography, Paper } from '@mui/material';
-import { updateHouseDetails } from '../../services/houseService'; 
 import * as Yup from 'yup';
+import houseService from '../../services/houseService';
 
 interface HouseDetail {
   id: number;
@@ -33,7 +33,7 @@ const HouseUpdateForm: React.FC<HouseUpdateFormProps> = ({ house, setEditMode, o
     }),
     onSubmit: async (values) => {
       try {
-        await updateHouseDetails(house.id, values);
+        await houseService.updateHouseDetails(house.id, values);
         setEditMode(false); // Exit edit mode
         onUpdateSuccess(true);
       } catch (error) {

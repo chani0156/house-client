@@ -1,16 +1,9 @@
 import axios from 'axios';
+import config from '../src/config/config';
 
-const api = axios.create({
-  baseURL: 'http://localhost:3000/api/', // Set your API base URL here
-});
+const api = axios.create({ baseURL: config.API_BASE_URL });
 
-export const createHouse = async (data: any) => {
-    // try {
-    //     const response = await api.get(`/houses/1`);
-    //     return response.data;
-    //   } catch (error) {
-    //     throw new Error('Error fetching house details');
-    //   }
+const createHouse = async (data: any) => {
   try {
     const response = await api.post('/houses', data);
     return response.data;
@@ -19,7 +12,7 @@ export const createHouse = async (data: any) => {
   }
 };
 
-export const getHouseById = async (id: number) => {
+const getHouseById = async (id: number) => {
   try {
     const response = await api.get(`/houses/${id}`);
     return response.data;
@@ -28,7 +21,7 @@ export const getHouseById = async (id: number) => {
   }
 };
 
-export const updateHouseDetails = async (id: number, data: any) => {
+const updateHouseDetails = async (id: number, data: any) => {
   try {
     const response = await api.put(`/houses/${id}`, data);
     return response.data;
@@ -36,3 +29,9 @@ export const updateHouseDetails = async (id: number, data: any) => {
     throw new Error('Error updating house details');
   }
 };
+
+export default {
+    createHouse,
+    getHouseById,
+    updateHouseDetails,
+  };
