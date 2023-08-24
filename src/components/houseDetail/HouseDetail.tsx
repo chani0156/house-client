@@ -46,8 +46,8 @@ const HouseDetail: React.FC = () => {
         const fetchedHouse = await houseService.getHouseById(Number(id));
         setHouse(fetchedHouse);
       } catch (error) {
-        console.error('Error fetching house details:', error);
-      }
+        debugger
+        openSnackbar('Error updating house details', 'error');      }
     }
 
     fetchHouseDetails();

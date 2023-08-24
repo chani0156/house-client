@@ -3,6 +3,27 @@ import config from '../src/config/config';
 
 const api = axios.create({ baseURL: config.API_BASE_URL });
 
+// Request interceptor
+api.interceptors.request.use(
+    (config) => {
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+  
+  // Response interceptor
+  api.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+
+  
 const createHouse = async (data: any) => {
   try {
     const response = await api.post('/houses', data);

@@ -60,6 +60,7 @@ const HouseForm: React.FC = () => {
      else openSnackbar('Error creating house details', 'error');
       } 
       catch (error) {
+        openSnackbar('Error creating house details', 'error');
       }
     },
   });
