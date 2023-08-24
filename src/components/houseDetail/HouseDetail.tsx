@@ -17,6 +17,8 @@ const HouseDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [house, setHouse] = useState<HouseDetail | null>(null);
   const [editMode, setEditMode] = useState(false);
+  const [isUpdateSuccess, setIsUpdateSuccess] = useState(false);
+
   const [snackbarInfo, setSnackbarInfo] = useState<{
     open: boolean;
     message: string;
@@ -49,31 +51,29 @@ const HouseDetail: React.FC = () => {
     }
 
     fetchHouseDetails();
-  }, [id]);
+  }, [id,isUpdateSuccess]);
 
   const handleEditClick = () => {
+    setIsUpdateSuccess(false);
     setEditMode(true);
   };
   const handleUpdateSuccess = async (isSuccess: boolean) => {
     try {
         if(isSuccess){
+            setIsUpdateSuccess(true);
             openSnackbar('House details updated successfully!', 'success');
-            const updatedHouse = await houseService.getHouseById(Number(id));
-            setHouse(updatedHouse);
             setEditMode(false);
         }
         else openSnackbar('Error updating house details', 'error');
 
-     
     } catch (error) {
       console.error('Error fetching updated house details:', error);
     }
   };
-  if (!house) {
-    return <div>Loading...</div>;
-  }
 
   return (
+    <>{!house?
+    <div>Loading...</div>:
     <Container component={Paper} maxWidth="xs" sx={{ padding: 3, marginTop: 4 }}>
       <Typography variant="h5" align="center" gutterBottom>
         House Details
@@ -93,7 +93,7 @@ const HouseDetail: React.FC = () => {
           </Button>
           <Link to="/" style={{ textDecoration: 'none' }}>
             <Button variant="outlined" color="secondary" fullWidth sx={{ marginTop: 2 }}>
-              Back to List
+              Back 
             </Button>
           </Link>
         </div>
@@ -105,6 +105,7 @@ const HouseDetail: React.FC = () => {
          onClose={handleSnackbarClose}
       />
     </Container>
+}</>
   );
 };
 

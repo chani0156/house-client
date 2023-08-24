@@ -91,6 +91,7 @@ const HouseUpdateForm: React.FC<HouseUpdateFormProps> = ({ house, setEditMode, o
           variant="outlined"
           color="secondary"
           fullWidth
+          disabled={formik.isSubmitting}
           onClick={() => setEditMode(false)}
           sx={{ marginTop: 2 }}
         >
