@@ -1,6 +1,7 @@
 import axios from 'axios';
 import config from '../src/config/config';
 
+// Create a new instance of axios with the API base URL
 const api = axios.create({ baseURL: config.API_BASE_URL });
 
 // Request interceptor
@@ -16,14 +17,16 @@ api.interceptors.request.use(
   // Response interceptor
   api.interceptors.response.use(
     (response) => {
+        debugger
       return response;
     },
     (error) => {
+        debugger
       return Promise.reject(error);
     }
   );
 
-  
+  // Define API functions
 const createHouse = async (data: any) => {
   try {
     const response = await api.post('/houses', data);
@@ -51,6 +54,7 @@ const updateHouseDetails = async (id: number, data: any) => {
   }
 };
 
+// Export the API functions
 export default {
     createHouse,
     getHouseById,

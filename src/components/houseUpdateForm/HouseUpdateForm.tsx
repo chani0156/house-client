@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useFormik } from 'formik';
 import { Button, TextField, Container, Typography, Paper } from '@mui/material';
 import * as Yup from 'yup';
@@ -18,13 +18,12 @@ interface HouseUpdateFormProps {
   onUpdateSuccess: (isSuccess: boolean) => void;
 }
 
-const HouseUpdateForm: React.FC<HouseUpdateFormProps> = ({ house, setEditMode, onUpdateSuccess  }) => {
-   
+const HouseUpdateForm: React.FC<HouseUpdateFormProps> = ({ house, setEditMode, onUpdateSuccess }) => {
   const formik = useFormik({
     initialValues: {
       address: house.address,
-      currentValue: house.currentValue.toString(),
-      loanAmount: house.loanAmount.toString(),
+      currentValue: house.currentValue,
+      loanAmount: house.loanAmount,
     },
     validationSchema: Yup.object({
       address: Yup.string().required('Address is required'),
@@ -41,6 +40,8 @@ const HouseUpdateForm: React.FC<HouseUpdateFormProps> = ({ house, setEditMode, o
       }
     },
   });
+
+  const isSubmitting = formik.isSubmitting;
 
   return (
     <Container component={Paper} maxWidth="xs" sx={{ padding: 3, marginTop: 4 }}>
@@ -83,7 +84,7 @@ const HouseUpdateForm: React.FC<HouseUpdateFormProps> = ({ house, setEditMode, o
           error={formik.touched.loanAmount && Boolean(formik.errors.loanAmount)}
           helperText={formik.touched.loanAmount && formik.errors.loanAmount}
         />
-        <Button type="submit" variant="contained" color="primary" fullWidth>
+        <Button type="submit" variant="contained" color="primary" fullWidth disabled={isSubmitting}>
           Update
         </Button>
         <Button
@@ -91,7 +92,7 @@ const HouseUpdateForm: React.FC<HouseUpdateFormProps> = ({ house, setEditMode, o
           variant="outlined"
           color="secondary"
           fullWidth
-          disabled={formik.isSubmitting}
+          disabled={isSubmitting}
           onClick={() => setEditMode(false)}
           sx={{ marginTop: 2 }}
         >

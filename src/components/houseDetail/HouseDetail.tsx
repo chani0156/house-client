@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import HouseUpdateForm from '../houseUpdateForm/HouseUpdateForm'; 
 import { Container, Paper, Typography, Button } from '@mui/material';
-import Snacknar from '../common/Snacknar';
+import Snackbar from '../common/Snackbar';
 import houseService from '../../services/houseService';
+import useSnackbar from '../../hooks/useSnackbar';
 
+// Interface to define the structure of house details
 interface HouseDetail {
   id: number;
   address: string;
@@ -18,38 +20,17 @@ const HouseDetail: React.FC = () => {
   const [house, setHouse] = useState<HouseDetail | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [isUpdateSuccess, setIsUpdateSuccess] = useState(false);
+  const { snackbarInfo, openSnackbar, closeSnackbar } = useSnackbar(); // Use the custom hook
 
-  const [snackbarInfo, setSnackbarInfo] = useState<{
-    open: boolean;
-    message: string;
-    severity: 'success' | 'error';
-  }>({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
-
-  const handleSnackbarClose = () => {
-    setSnackbarInfo((prevInfo) => ({ ...prevInfo, open: false }));
-  };
-
-  const openSnackbar = (message: string, severity: 'success' | 'error') => {
-    setSnackbarInfo({
-      open: true,
-      message,
-      severity,
-    });
-  };
+    // Fetch house details from API based on the ID parameter
   useEffect(() => {
     async function fetchHouseDetails() {
       try {
         const fetchedHouse = await houseService.getHouseById(Number(id));
         setHouse(fetchedHouse);
       } catch (error) {
-        debugger
         openSnackbar('Error updating house details', 'error');      }
     }
-
     fetchHouseDetails();
   }, [id,isUpdateSuccess]);
 
@@ -72,8 +53,7 @@ const HouseDetail: React.FC = () => {
   };
 
   return (
-    <>{!house?
-    <div>Loading...</div>:
+    <>{house?
     <Container component={Paper} maxWidth="xs" sx={{ padding: 3, marginTop: 4 }}>
       <Typography variant="h5" align="center" gutterBottom>
         House Details
@@ -87,7 +67,6 @@ const HouseDetail: React.FC = () => {
           <Typography>Current Value: {house.currentValue}</Typography>
           <Typography>Loan Amount: {house.loanAmount}</Typography>
           <Typography>Risk: {house.risk}</Typography>
-          {/* Add other details here */}
           <Button variant="contained" color="primary" onClick={handleEditClick} fullWidth>
             Edit
           </Button>
@@ -98,13 +77,14 @@ const HouseDetail: React.FC = () => {
           </Link>
         </div>
       )}
-       <Snacknar
-         open={snackbarInfo.open}
-         message={snackbarInfo.message}
-         severity={snackbarInfo.severity}
-         onClose={handleSnackbarClose}
+       <Snackbar
+         open={snackbarInfo?.open || false}
+         message={snackbarInfo?.message || ''}
+         severity={snackbarInfo?.severity || 'success'}
+         onClose={closeSnackbar}
       />
-    </Container>
+    </Container>:
+     <div>Loading...</div>
 }</>
   );
 };

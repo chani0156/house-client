@@ -8,8 +8,9 @@ interface DynamicSnackbarProps {
   onClose: () => void;
 }
 
-const DynamicSnackbar: React.FC<DynamicSnackbarProps> = ({ open, message, severity, onClose }) => {
-  const [snackbarOpen, setSnackbarOpen] = useState(open);
+const DynamicSnackbar: React.FC<DynamicSnackbarProps> = React.memo(
+  ({ open, message, severity, onClose }) => {
+    const [snackbarOpen, setSnackbarOpen] = useState(open);
 
   useEffect(() => {
     setSnackbarOpen(open);
@@ -32,7 +33,7 @@ const DynamicSnackbar: React.FC<DynamicSnackbarProps> = ({ open, message, severi
         }}
       />
     </Snackbar>
-  );
-};
-
+    );
+  }
+);
 export default DynamicSnackbar;

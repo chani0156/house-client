@@ -3,33 +3,15 @@ import { useFormik } from 'formik';
 import { Button, TextField, Container, Typography, Paper } from '@mui/material';
 import * as Yup from 'yup'; 
 import { useNavigate } from 'react-router-dom';
-import Snacknar from '../common/Snacknar'; 
+import Snackbar from '../common/Snackbar'; 
 import houseService from '../../services/houseService';
+import useSnackbar from '../../hooks/useSnackbar';
 
 const HouseForm: React.FC = () => {
     const navigate = useNavigate();
     const [createdHouseId, setCreatedHouseId] = useState<number | null>(null);
-    const [snackbarInfo, setSnackbarInfo] = useState<{
-        open: boolean;
-        message: string;
-        severity: 'success' | 'error';
-      }>({
-        open: false,
-        message: '',
-        severity: 'success',
-      });
-    
-      const handleSnackbarClose = () => {
-        setSnackbarInfo((prevInfo) => ({ ...prevInfo, open: false }));
-      };
-    
-      const openSnackbar = (message: string, severity: 'success' | 'error') => {
-        setSnackbarInfo({
-          open: true,
-          message,
-          severity,
-        });
-      };
+    const { snackbarInfo, openSnackbar, closeSnackbar } = useSnackbar(); // Use the custom hook
+
   // Handle navigation to view details
     const handleViewDetails = () => {
         if (createdHouseId !== null) {
@@ -114,11 +96,11 @@ const HouseForm: React.FC = () => {
         </Button>
       </form>)}
      {/* Snackbar component for displaying messages */}
-      <Snacknar
-         open={snackbarInfo.open}
-         message={snackbarInfo.message}
-         severity={snackbarInfo.severity}
-         onClose={handleSnackbarClose}
+     <Snackbar
+         open={snackbarInfo?.open || false}
+         message={snackbarInfo?.message || ''}
+         severity={snackbarInfo?.severity || 'success'}
+         onClose={closeSnackbar}
       />
     </Container>
   );
