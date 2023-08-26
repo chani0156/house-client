@@ -1,5 +1,5 @@
 import axios from 'axios';
-import config from '../src/config/config';
+import config from '../config/config';
 
 // Create a new instance of axios with the API base URL
 const api = axios.create({ baseURL: config.API_BASE_URL });
@@ -17,11 +17,9 @@ api.interceptors.request.use(
   // Response interceptor
   api.interceptors.response.use(
     (response) => {
-        debugger
       return response;
     },
     (error) => {
-        debugger
       return Promise.reject(error);
     }
   );
